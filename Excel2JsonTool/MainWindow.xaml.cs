@@ -116,6 +116,7 @@ namespace Excel2JsonTool
                     {
                         foreach (ExcelWorksheet worksheet in package.Workbook.Worksheets)
                         {
+                            string sheetName = worksheet.Name;
                             // 找出工作表内有.json的工作表
                             if (worksheet.Name.Contains(".json"))
                             {
@@ -149,6 +150,7 @@ namespace Excel2JsonTool
                                         // 參數值
                                         object cellValue = worksheet.Cells[rowNumber, columnNumber].Value;
 
+                                        //若參數含有',' 判斷為List
                                         if (cellValue is string && ((string)cellValue).Contains(","))
                                         {
                                             // 若參數包含':' 分割成List
@@ -164,19 +166,37 @@ namespace Excel2JsonTool
                                             }
                                         }
 
-                                        //寫入此次
-                                        dataRow.Add(headerName, cellValue);
+                                        //寫入此次資料
+                                        if (!sheetName.Contains('#'))
+                                        {   
+                                            //若是不含#字表格 直接寫入
+                                            dataRow.Add(headerName, cellValue);
+                                        }
+                                        else
+                                        {
+                                            //若是含#字表格 做額外處理 沒有此筆key寫入行列單位
+                                            if (!dataRow.ContainsKey(headerName))
+                                                dataRow.Add(headerName, cellValue);
+                                            else
+                                            {
+                                                //已經有此筆key 把行列單位匯出json資料
+                                                data.Add(dataRow);
+                                                //重新初始化行列單位 此次還沒寫入 所以初始完必須寫入
+                                                dataRow = new Dictionary<string, object>();
+                                                dataRow.Add(headerName, cellValue);
+                                            }
+                                        }
                                     }
                                     if (dataRow.Count > 0)
+                                    {
                                         data.Add(dataRow);
+                                    }
                                 }
 
                                 var jsonSettings = new JsonSerializerSettings
                                 {
                                     Formatting = Newtonsoft.Json.Formatting.Indented,
                                 };
-
-                                string sheetName = worksheet.Name;
 
                                 //若表單含有#字
                                 if (sheetName.Contains('#'))

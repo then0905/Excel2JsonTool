@@ -22,5 +22,6 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="71,300,342,0" VerticalAlignment="Top" Height="100">
             <Label x:Name="ResultTextBox" HorizontalAlignment="Left"/>
         </ScrollViewer>
+        <Image x:Name="MyImage" Source="Image/exe.png" HorizontalAlignment="Left" Height="185" Margin="481,258,0,-24" VerticalAlignment="Top" Width="210"/>
     </Grid>
 </Window>
