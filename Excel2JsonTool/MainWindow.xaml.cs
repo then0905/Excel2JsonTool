@@ -41,9 +41,6 @@ namespace Excel2JsonTool
         public MainWindow()
         {
             InitializeComponent();
-          
-            
-
         }
 
         /// <summary>
@@ -91,28 +88,27 @@ namespace Excel2JsonTool
                     {
                         foreach (ExcelWorksheet worksheet in package.Workbook.Worksheets)
                         {
-                            if (worksheet.Name.Contains(".json"))
+                            if (worksheet.Name.Contains(".json") && !worksheet.Name.Contains("#"))
                             {
-                                string sheetName;
-                                sheetName = worksheet.Name;
+                                string sheetName = worksheet.Name;
                                 JsonList.Add(sheetName);
                             }
                         }
                     }
                 }
-                //Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-                //Workbook workbook = excelApp.Workbooks.Open(excelPath);
-
-
-
                 //設定工作狀態
                 UpdateWorking(JsonList);
             });
 
             WaitingText.Content = "正在轉檔中...";
+
+            //暫存全部的轉檔資料
+            var tempJsonData = new Dictionary<string, List<Dictionary<string, object>>>();
+
             await Task.Run(() =>
             {
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;// 關閉新許可模式通知
+
                 foreach (string excelPathItem in excelPathList)
                 {
                     if (string.IsNullOrEmpty(excelPathItem)) continue;
@@ -123,6 +119,8 @@ namespace Excel2JsonTool
                             // 找出工作表内有.json的工作表
                             if (worksheet.Name.Contains(".json"))
                             {
+                                //暫存含有#字表單的標題
+                                string jsonListTitle = worksheet.Cells[1, 2].Value.ToString();
                                 //找出內容最多到第幾列
                                 int lastColumnNumber = worksheet.Dimension.End.Column;
 
@@ -178,25 +176,63 @@ namespace Excel2JsonTool
                                     Formatting = Newtonsoft.Json.Formatting.Indented,
                                 };
 
-                                string sheetName;
-                                //取正確的json檔名 過濾excel名稱
-                                //if (worksheet.Name.Contains('_'))
-                                //    sheetName = worksheet.Name.Split('_')[1];
-                                //else
-                                sheetName = worksheet.Name;
+                                string sheetName = worksheet.Name;
 
-                                // 将資料序列化為json
-                                string json = JsonConvert.SerializeObject(data, jsonSettings);
-                                // 創建json檔案
-                                System.IO.File.WriteAllText($"{jsonPath}\\{sheetName}", json);
+                                //若表單含有#字
+                                if (sheetName.Contains('#'))
+                                {
+                                    //取得該表單正確的json名稱
+                                    string mainSheetName = sheetName.Split('#')[0];
 
-                                FinishJsonList.Add(sheetName);
+                                    // 如果主json文件還沒在 tempJsonData 中，創造一個
+                                    if (!tempJsonData.ContainsKey(mainSheetName))
+                                        tempJsonData[mainSheetName] = new List<Dictionary<string, object>>();
 
+                                    // 尋找主表裡已有的和現在這個子表第一個key相同的值
+                                    foreach (Dictionary<string, object> mainItem in tempJsonData[mainSheetName])
+                                    {
+                                        var linkKey = mainItem.First().Value;  // 主表的第一個value
+                                        foreach (var item in data)
+                                        {
+                                            var subLinkKey = item.First().Value;  //子表的第一個value
+                                            if (linkKey == subLinkKey)
+                                            {
+                                                // 若找到，創造一個新的子表列表
+                                                if (!mainItem.ContainsKey(jsonListTitle))
+                                                {
+                                                    mainItem[jsonListTitle] = new List<Dictionary<string, object>>();
+                                                }
+                                         (mainItem[jsonListTitle] as List<Dictionary<string, object>>).Add(item);
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // 如果工作表名稱不含 '#', 當作主json文件處理
+                                    tempJsonData[sheetName] = data;
+                                }
                             }
                         }
-                        // 設定工作狀態
-                        UpdateWorking(JsonList, FinishJsonList);
                     }
+                }
+            });
+
+            await Task.Run(() =>
+            {
+                // 最後把 tempJsonData 寫入 JSON 檔案
+                foreach (var item in tempJsonData)
+                {
+                    var jsonSettings = new JsonSerializerSettings
+                    {
+                        Formatting = Newtonsoft.Json.Formatting.Indented,
+                    };
+                    string json = JsonConvert.SerializeObject(item.Value, jsonSettings);
+                    // 創建json檔案
+                    File.WriteAllText($"{jsonPath}\\{item.Key}", json);
+                    FinishJsonList.Add(item.Key);
+                    // 設定工作狀態
+                    UpdateWorking(JsonList, FinishJsonList);
                 }
             });
 

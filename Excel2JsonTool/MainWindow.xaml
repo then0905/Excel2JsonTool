@@ -14,7 +14,7 @@
         <TextBox x:Name="JsonInputTextBox" HorizontalAlignment="Left" Margin="187,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="574" Height="26"/>
         <Label Content="輸出Json路徑:" HorizontalAlignment="Left" Margin="71,144,0,0" VerticalAlignment="Top" Width="116"/>
         <Button x:Name="JsonPathButton" Content="輸出Json路徑" HorizontalAlignment="Left" Margin="600,0,0,0" VerticalAlignment="Center" Height="39" Width="110" Click="ExportJsonPath_Click"/>
-        <Label Content="運轉規則:&#xD;&#xA;1.需被轉為Json的工作表命名結尾一定要.json&#xD;&#xA;2.欄位內容含','字元自動被轉為List&#xD;&#xA;3.表單含'#'字元,該表單被轉為該Jsont資料裡的List&#xD;&#xA;" HorizontalAlignment="Left" Margin="71,181,0,0" VerticalAlignment="Top" Width="292" Height="85"/>
+        <Label Content="運轉規則:&#xA;1.需被轉為Json的工作表命名結尾一定要.json&#xA;2.欄位內容含','字元自動被轉為List&#xA;3.表單含'#'字元,該表單被轉為該Json資料裡的List&#xD;&#xA;4.#字的第一列ID需與主表格第一列ID標題欄相同值&#xA;" HorizontalAlignment="Left" Margin="71,181,0,0" VerticalAlignment="Top" Width="292" Height="85"/>
 
         <Button x:Name="ConvertButton" Content="開始轉換" HorizontalAlignment="Left" Margin="696,350,0,0" VerticalAlignment="Top" Height="39" Width="65" Click="ConvertButton_Click"/>
 
