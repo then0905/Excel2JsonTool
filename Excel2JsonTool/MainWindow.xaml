@@ -7,15 +7,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="ExcelInputTextBox" HorizontalAlignment="Left" Margin="187,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="574" Height="38"/>
+        <TextBox x:Name="ExcelInputTextBox" HorizontalAlignment="Left" Margin="187,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="574" Height="25"/>
         <Label Content="導入Excel路徑:" HorizontalAlignment="Left" Margin="71,43,0,0" VerticalAlignment="Top" Width="116"/>
-        <Button x:Name="BrowseExcelButton" Content="導入Excel檔案" HorizontalAlignment="Left" Margin="600,100,0,0" VerticalAlignment="Top" Height="39" Width="110" Click="BrowseExcel_Click"/>
+        <Button x:Name="BrowseExcelButton" Content="導入Excel檔案" HorizontalAlignment="Left" Margin="600,85,0,0" VerticalAlignment="Top" Height="39" Width="110" Click="BrowseExcel_Click"/>
 
-        <TextBox x:Name="JsonInputTextBox" HorizontalAlignment="Left" Margin="187,193,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="574" Height="38"/>
-        <Label Content="輸出Json路徑:" HorizontalAlignment="Left" Margin="71,193,0,0" VerticalAlignment="Top" Width="116"/>
-        <Button x:Name="JsonPathButton" Content="輸出Json路徑" HorizontalAlignment="Left" Margin="600,250,0,0" VerticalAlignment="Top" Height="39" Width="110" Click="ExportJsonPath_Click"/>
+        <TextBox x:Name="JsonInputTextBox" HorizontalAlignment="Left" Margin="187,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="574" Height="26"/>
+        <Label Content="輸出Json路徑:" HorizontalAlignment="Left" Margin="71,144,0,0" VerticalAlignment="Top" Width="116"/>
+        <Button x:Name="JsonPathButton" Content="輸出Json路徑" HorizontalAlignment="Left" Margin="600,0,0,0" VerticalAlignment="Center" Height="39" Width="110" Click="ExportJsonPath_Click"/>
+        <Label Content="運轉規則:&#xD;&#xA;1.需被轉為Json的工作表命名結尾一定要.json&#xD;&#xA;2.欄位內容含','字元自動被轉為List&#xD;&#xA;3.表單含'#'字元,該表單被轉為該Jsont資料裡的List&#xD;&#xA;" HorizontalAlignment="Left" Margin="71,181,0,0" VerticalAlignment="Top" Width="292" Height="85"/>
 
-        <Button x:Name="ConvertButton" Content="開始轉換" HorizontalAlignment="Left" Margin="696,339,0,0" VerticalAlignment="Top" Height="39" Width="65" Click="ConvertButton_Click"/>
+        <Button x:Name="ConvertButton" Content="開始轉換" HorizontalAlignment="Left" Margin="696,350,0,0" VerticalAlignment="Top" Height="39" Width="65" Click="ConvertButton_Click"/>
 
         <Label x:Name="WaitingText" Content="錯誤：未正確選擇導入或輸出路徑..."  Visibility="Hidden" Foreground="Red"  HorizontalAlignment="Left" Margin="464,328,0,0" VerticalAlignment="Top" Width="191" Height="50"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="71,300,342,0" VerticalAlignment="Top" Height="100">

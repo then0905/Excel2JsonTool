@@ -94,12 +94,7 @@ namespace Excel2JsonTool
                             if (worksheet.Name.Contains(".json"))
                             {
                                 string sheetName;
-                                //取正確的json檔名 過濾excel名稱
-                                //if (worksheet.Name.Contains('_'))
-                                //    sheetName = worksheet.Name.Split('_')[1];
-                                //else
                                 sheetName = worksheet.Name;
-
                                 JsonList.Add(sheetName);
                             }
                         }
@@ -156,6 +151,11 @@ namespace Excel2JsonTool
                                         // 參數值
                                         object cellValue = worksheet.Cells[rowNumber, columnNumber].Value;
 
+                                        if (cellValue is string && ((string)cellValue).Contains(","))
+                                        {
+                                            // 若參數包含':' 分割成List
+                                            cellValue = ((string)cellValue).Split(',').ToList();
+                                        }
                                         //若參數值可以為數字 判斷整數或是小數點
                                         if (cellValue is double)
                                         {
