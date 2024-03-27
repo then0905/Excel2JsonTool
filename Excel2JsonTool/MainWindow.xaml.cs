@@ -146,15 +146,14 @@ namespace Excel2JsonTool
                                             continue;
 
                                         // 參數名稱，讀取標題列的值
-                                        string headerName = worksheet.Cells[1, columnNumber].Value.ToString();
+                                        string headerName = worksheet.Cells[1, columnNumber].Value.ToString().Replace("$",string.Empty);
                                         // 參數值
                                         object cellValue = worksheet.Cells[rowNumber, columnNumber].Value;
 
-                                        //若參數含有',' 判斷為List
-                                        if (cellValue is string && ((string)cellValue).Contains(","))
+                                        //標題欄含有'$' 判斷欄位為List資料
+                                        if (worksheet.Cells[1, columnNumber].Value.ToString().Contains("$"))
                                         {
-                                            // 若參數包含':' 分割成List
-                                            cellValue = ((string)cellValue).Split(',').ToList();
+                                            cellValue = (cellValue).ToString().Split(',').ToList();
                                         }
                                         //若參數值可以為數字 判斷整數或是小數點
                                         if (cellValue is double)
