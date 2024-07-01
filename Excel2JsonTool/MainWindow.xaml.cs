@@ -210,10 +210,10 @@ namespace Excel2JsonTool
                                     // 尋找主表裡已有的和現在這個子表第一個key相同的值
                                     foreach (Dictionary<string, object> mainItem in tempJsonData[mainSheetName])
                                     {
-                                        var linkKey = mainItem.First().Value;  // 主表的第一個value
+                                        var linkKey = mainItem.First().Value.ToString();  // 主表的第一個value
                                         foreach (var item in data)
                                         {
-                                            var subLinkKey = item.First().Value;  //子表的第一個value
+                                            var subLinkKey = item.First().Value.ToString();  //子表的第一個value
                                             if (linkKey == subLinkKey)
                                             {
                                                 // 若找到，創造一個新的子表列表
