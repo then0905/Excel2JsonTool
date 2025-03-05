@@ -118,10 +118,8 @@ namespace Excel2JsonTool
                         {
                             string sheetName = worksheet.Name;
                             // 找出工作表内有.json的工作表
-                            if (worksheet.Name.Contains(".json"))
+                            if (sheetName.Contains(".json"))
                             {
-                                //暫存含有#字表單的標題
-                                string jsonListTitle = worksheet.Cells[1, 2].Value.ToString();
                                 //找出內容最多到第幾列
                                 int lastColumnNumber = worksheet.Dimension.End.Column;
 
@@ -199,7 +197,9 @@ namespace Excel2JsonTool
 
                                 //若表單含有#字
                                 if (sheetName.Contains('#'))
-                                {
+                                {                       
+                                    //暫存含有#字表單的標題
+                                    string jsonListTitle = worksheet.Cells[1, 2].Value.ToString();
                                     //取得該表單正確的json名稱
                                     string mainSheetName = sheetName.Split('#')[0];
 
